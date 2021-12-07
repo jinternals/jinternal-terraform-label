@@ -33,6 +33,12 @@ func TestModuleDisabled(t *testing.T) {
 
 func verifyModuleDisabled(t *testing.T, terraformOptions *terraform.Options) {
 
+	id := terraform.Output(t, terraformOptions, "id")
+	assert.Empty(t, id, "id was not empty.")
+
+	name := terraform.Output(t, terraformOptions, "name")
+	assert.Empty(t, name, "tags was not empty.")
+
 	tags := terraform.OutputMap(t, terraformOptions, "tags")
 	assert.Empty(t, tags, "tags was not empty.")
 
