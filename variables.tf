@@ -13,7 +13,7 @@ variable "context" {
     regex_replace_chars    = null
     label_order            = []
     label_key_case         = null
-    labels_allowed_in_tags = ["unset"]
+    labels_allowed_in_tags = [] // default labels will be used
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -86,7 +86,7 @@ variable "attributes" {
 
 variable "labels_allowed_in_tags" {
   type        = set(string)
-  default     = ["default"]
+  default     = []
   description = <<-EOT
     Set of labels (ID elements) to include as tags in the `tags` output.
     Default is to include all labels.

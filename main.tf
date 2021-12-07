@@ -9,15 +9,15 @@ locals {
   }
 
   replacement                             = local.defaults.replacement
-  default_labels_allowed_in_tags          = keys(local.tags_context)
-  context_labels_allowed_in_tags_is_unset = try(contains(var.context.labels_allowed_in_tags, "unset"), true)
 
   input = {
     enabled     = var.enabled == null ? var.context.enabled : var.enabled
+
     team        = var.team == null ? var.context.team : var.team
     environment = var.environment == null ? var.context.environment : var.environment
     region      = var.region == null ? var.context.region : var.region
     name        = var.name == null ? var.context.name : var.name
+
     delimiter   = var.delimiter == null ? var.context.delimiter : var.delimiter
     attributes  = compact(distinct(concat(coalesce(var.context.attributes, []), coalesce(var.attributes, []))))
     tags        = merge(var.context.tags, var.tags)
@@ -27,7 +27,7 @@ locals {
     regex_replace_chars = var.regex_replace_chars == null ? var.context.regex_replace_chars : var.regex_replace_chars
     label_key_case      = var.label_key_case == null ? var.context.label_key_case : var.label_key_case
 
-    labels_allowed_in_tags = local.context_labels_allowed_in_tags_is_unset ? var.labels_allowed_in_tags : var.context.labels_allowed_in_tags
+    labels_allowed_in_tags = length(var.labels_allowed_in_tags) != 0 ? var.labels_allowed_in_tags : var.context.labels_allowed_in_tags
   }
 
   enabled             = local.input.enabled
@@ -48,7 +48,8 @@ locals {
   label_order    = local.input.label_order == null ? local.defaults.label_order : local.input.label_order
   label_key_case = local.input.label_key_case == null ? local.defaults.label_key_case : local.input.label_key_case
 
-  labels_allowed_in_tags = contains(local.input.labels_allowed_in_tags, "default") ? local.default_labels_allowed_in_tags : local.input.labels_allowed_in_tags
+  labels_allowed_in_tags = length(local.input.labels_allowed_in_tags) == 0  ? keys(local.tags_context) : local.input.labels_allowed_in_tags
+
   additional_tag_map = merge(var.context.additional_tag_map, var.additional_tag_map)
   tags = merge(local.generated_tags, local.input.tags)
   tags_as_list_of_maps = flatten([

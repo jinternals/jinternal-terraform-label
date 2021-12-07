@@ -8,7 +8,7 @@ import (
 )
 
 func TestModuleDisabled(t *testing.T) {
-	t.Parallel()
+	//t.Parallel()
 	// retryable errors in terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../",

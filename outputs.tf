@@ -1,6 +1,6 @@
 output "id" {
   value       = local.enabled ? local.id : ""
-  description = "Disambiguated ID string restricted to `id_length_limit` characters in total"
+  description = "ID string"
 }
 
 output "enabled" {
@@ -10,7 +10,7 @@ output "enabled" {
 
 output "team" {
   value       = local.enabled ? local.team : ""
-  description = "Normalized tenant"
+  description = "Normalized team"
 }
 
 output "environment" {

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTerraformTags(t *testing.T) {
+func TestTerraformTagsWithAllowedLabels(t *testing.T) {
 	// retryable errors in terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../",
@@ -17,6 +17,7 @@ func TestTerraformTags(t *testing.T) {
 			"region": "dr",
 			"name": "app",
 			"attributes": []string{"demo"},
+			"labels_allowed_in_tags": []string{"name"},
 		},
 
 	})
@@ -25,20 +26,20 @@ func TestTerraformTags(t *testing.T) {
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	verifyGeneratedTags(t, terraformOptions)
+	verifyTerraformTagsWithAllowedLabels(t, terraformOptions)
 
 }
 
-func verifyGeneratedTags(t *testing.T, terraformOptions *terraform.Options) {
+func verifyTerraformTagsWithAllowedLabels(t *testing.T, terraformOptions *terraform.Options) {
 
 	id := terraform.Output(t, terraformOptions, "id")
 	assert.Equal(t, "team-test-dr-app-demo", id)
 
 	tags := terraform.OutputMap(t, terraformOptions, "tags")
 	assert.Equal(t, "team-test-dr-app-demo", tags["Name"])
-	assert.Equal(t, "team", tags["Team"])
-	assert.Equal(t, "test", tags["Environment"])
-	assert.Equal(t, "dr", tags["Region"])
-	assert.Equal(t, "demo", tags["Attributes"])
+	assert.Equal(t, "", tags["Team"])
+	assert.Equal(t, "", tags["Environment"])
+	assert.Equal(t, "", tags["Region"])
+	assert.Equal(t, "", tags["Attributes"])
 
 }

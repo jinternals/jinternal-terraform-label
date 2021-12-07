@@ -7,11 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTerraformTags(t *testing.T) {
+func TestTerraformTagsWithChangedDelimiter(t *testing.T) {
 	// retryable errors in terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../",
 		Vars: map[string]interface{}{
+			"delimiter": "+",
 			"team": "team",
 			"environment": "test",
 			"region": "dr",
@@ -25,17 +26,17 @@ func TestTerraformTags(t *testing.T) {
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	verifyGeneratedTags(t, terraformOptions)
+	verifyTerraformTagsWithChangedDelimiter(t, terraformOptions)
 
 }
 
-func verifyGeneratedTags(t *testing.T, terraformOptions *terraform.Options) {
+func verifyTerraformTagsWithChangedDelimiter(t *testing.T, terraformOptions *terraform.Options) {
 
 	id := terraform.Output(t, terraformOptions, "id")
-	assert.Equal(t, "team-test-dr-app-demo", id)
+	assert.Equal(t, "team+test+dr+app+demo", id)
 
 	tags := terraform.OutputMap(t, terraformOptions, "tags")
-	assert.Equal(t, "team-test-dr-app-demo", tags["Name"])
+	assert.Equal(t, "team+test+dr+app+demo", tags["Name"])
 	assert.Equal(t, "team", tags["Team"])
 	assert.Equal(t, "test", tags["Environment"])
 	assert.Equal(t, "dr", tags["Region"])
