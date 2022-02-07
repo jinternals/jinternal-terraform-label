@@ -1,12 +1,13 @@
 module "label-demo-1" {
   source   = "../"
 
-  team         = "007"
-  environment  = "prod"
-  region       = "main"
-  name         = "network"
-  delimiter    = "-"
-  attributes   = ["public"]
+  team           = "007"
+  environment    = "prod"
+  region         = "main"
+  name           = "network"
+  delimiter      = "-"
+  label_key_case = "title"
+  attributes     = ["public"]
 
   tags = {
     "BusinessUnit" = "XYZ",

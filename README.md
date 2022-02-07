@@ -7,14 +7,15 @@ go test -v .
 
 ```terraform
 module "label-demo-1" {
-  source   = "../"
+  source           = "../"
 
-  team         = "007"
-  environment  = "prod"
-  region       = "main"
-  name         = "network"
-  delimiter    = "-"
-  attributes   = ["public"]
+  team             = "007"
+  environment      = "prod"
+  region           = "main"
+  name             = "network"
+  delimiter        = "-"
+  label_key_case   = "title"
+  attributes       = ["public"]
 
   tags = {
     "BusinessUnit" = "XYZ",
@@ -23,24 +24,24 @@ module "label-demo-1" {
 }
 
 module "label-demo-2" {
-  source   = "../"
+  source       = "../"
 
   name         = "vm"
-  delimiter = "."
+  delimiter    = "."
 
   tags = {
-    "OWNER" = "Rabbit"
+    "OWNER"    = "Rabbit"
   }
 
-  context   = module.label-demo-1.context
+  context      = module.label-demo-1.context
 }
 
 ```
 
-Output:
+Changes to Outputs :
 
 ```terraform
-Changes to Outputs:
+
   + demo_1_tags = {
       + "Attributes"   = "public"
       + "BusinessUnit" = "XYZ"
@@ -50,6 +51,7 @@ Changes to Outputs:
       + "Snapshot"     = "true"
       + "Team"         = "007"
     }
+  
   + demo_2_tags = {
       + "Attributes"   = "public"
       + "BusinessUnit" = "XYZ"
